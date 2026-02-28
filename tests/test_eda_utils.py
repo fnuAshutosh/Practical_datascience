@@ -17,8 +17,8 @@ def test_load_and_clean(tmp_path):
         'Product Category': ['A', 'B'],
         'Transaction ID': [1, 2]
     })
-    path = tmp_path / "test.xlsx"
-    df.to_excel(path, index=False)
+    path = tmp_path / "test.csv"
+    df.to_csv(path, index=False)
 
     loaded = load_data(str(path))
     assert loaded.shape == (2, df.shape[1])

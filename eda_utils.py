@@ -5,24 +5,28 @@ steps from the notebook so they can be reused, tested and executed outside
 of the interactive environment.
 """
 
+import os
 import pandas as pd
 import numpy as np
 
 
 def load_data(path: str) -> pd.DataFrame:
-    """Read the retail sales Excel file into a DataFrame.
+    """Read the retail sales data into a DataFrame, inferring format.
 
-    Parameters
-    ----------
-    path : str
-        Path to the Excel file.
-
-    Returns
-    -------
-    pd.DataFrame
-        Raw data frame as read from disk.
+    Supports Excel (.xls, .xlsx) and CSV (.csv) by looking at the file
+    extension. The notebook originally used Excel, but CSV is easier for
+    testing and avoids an optional dependency.
     """
-    df = pd.read_excel(path)
+    ext = os.path.splitext(path)[1].lower()
+    if ext in ['.xls', '.xlsx']:
+        df = pd.read_excel(path)
+    elif ext == '.csv':
+        df = pd.read_csv(path)
+    else:
+        raise ValueError(f"Unsupported file extension '{ext}'")
+    # coerce date column if present
+    if 'Date' in df.columns:
+        df['Date'] = pd.to_datetime(df['Date'])
     return df
 
 
